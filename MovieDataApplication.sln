@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "MovieDataApplication", "MovieDataApplication\MovieDataApplication.pyproj", "{AB1AEE98-43EE-43A2-82F2-E99E2563C16E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB1AEE98-43EE-43A2-82F2-E99E2563C16E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB1AEE98-43EE-43A2-82F2-E99E2563C16E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A64A8A20-CAA2-4087-A83D-249F9A6AF349}
+	EndGlobalSection
+EndGlobal
