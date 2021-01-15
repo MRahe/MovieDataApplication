@@ -7,15 +7,10 @@ About: This application is used to make a .csv file that contains data from diff
 import os
 import csv 
 import math
+import cv2
 
-class MovieData:
-     def __init__(self, name, year, fileSize, duration, lenght, width):
-        self.name = name
-        self.year = year
-        self.fileSize = fileSize
-        self.duration = duration
-        self.length = length
-        self.width = width
+#Globe Data
+FileFormatArr= ['.mp4', '.mkv', '.m4v']
 
 def RemoveBadFiles(arr):
     count = 0
@@ -25,18 +20,29 @@ def RemoveBadFiles(arr):
             arr.pop(count)
         count+=1
 
-        #reurns the
+#returns the total file size of a directory.
 def GetFileSize(arr):
     sum = 0
 
     for i in arr:
         sum += os.path.getsize(os.getcwd() + '\\'+ i)
+
     sumGB = sum * math.pow(10, -9)
     return sumGB
-  
-        
+
+def GetDimensions(filename):
+    video = cv2.VideoCapture(filename)
+
+    height = video.get(cv2.CAP_PROP_FRAME_HEIGHT) 
+    width  = video.get(cv2.CAP_PROP_FRAME_WIDTH)  
+
+    arr = [height,width]
+    return arr
+
+     
 
 if __name__ == "__main__":
+    dimensionsArr = []
     csvFilename = 'temp.csv'
     moviesFilePath = 'M:\\Movies'
 
@@ -50,33 +56,34 @@ if __name__ == "__main__":
 
         movieArr = os.listdir(moviesFilePath)
 
-        csvWriter.writerow(['Name', ' Year', ' File Size', ' duration', ' Length', ' Width'])
+        csvWriter.writerow(['Name', ' Year', ' File Size', ' Duration', ' height', ' Width'])
 
         
         RemoveBadFiles(movieArr)
-  
 
         for m in movieArr:
             temp = str(m)
             name = temp[:len(temp) - 7]
             year = temp[len(temp) - 5: len(temp)-1]
 
-            #print(name)
-            #print(year)
-
             os.chdir('M:\\Movies\\' + temp)
 
-            print("Current working directory is:" + os.getcwd())
-
             dataArr = os.listdir(os.getcwd())
+            
             size = GetFileSize(dataArr)
 
-            csvWriter.writerow([name,year, size])
-            #os.chdir('..')
-            
+            for x in dataArr:
+                if x[len(x) - 4: len(x)] in FileFormatArr:
+                     #print(x)
+                     dimensionsArr = GetDimensions(x)
+               
+
+            duration = 'Duration' 
+            height = dimensionsArr[0]
+            width = dimensionsArr[1]
 
             
-                
-
+            csvWriter.writerow([name,year, size, duration, height, width])
+                   
     print('finished')
 
