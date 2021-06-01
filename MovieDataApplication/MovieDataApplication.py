@@ -6,11 +6,10 @@ About: This application is used to make a .csv file that contains data from diff
 
 import os
 import csv 
-import math
 import cv2
 
 #Globe Data
-FileFormatArr= ['.mp4', '.mkv', '.m4v']
+FileFormatArr = ['.mp4', '.mkv', '.m4v']
 
 def RemoveBadFiles(arr):
     count = 0
@@ -27,22 +26,27 @@ def GetFileSize(arr):
     for i in arr:
         sum += os.path.getsize(os.getcwd() + '\\'+ i)
 
-    sumGB = sum * math.pow(10, -9)
+    sumGB = sum * 10**-9
     return sumGB
 
-def GetDimensions(filename):
+#Uses cv2 to get height, width, and the runtime of the movie.
+def GetDimensions(filename, moviesFilePath):
     video = cv2.VideoCapture(filename)
 
     height = video.get(cv2.CAP_PROP_FRAME_HEIGHT) 
     width  = video.get(cv2.CAP_PROP_FRAME_WIDTH)  
+    fps = video.get(cv2.CAP_PROP_FPS)      # OpenCV2 version 2 used "CV_CAP_PROP_FPS"
+    frameCount = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+    runtime = (frameCount/fps)/60
+    print(runtime)
 
-    arr = [height,width]
-    return arr
+    return [height,width, runtime]
+    #return arr
 
-     
-
+#main function 
 if __name__ == "__main__":
     dimensionsArr = []
+    formatType = ''
     csvFilename = 'temp.csv'
     moviesFilePath = 'M:\\Movies'
 
@@ -52,13 +56,12 @@ if __name__ == "__main__":
     print("Starting looking through: " + moviesFilePath)
 
     with open(csvFilePath, 'w', newline='') as file:
-        csvWriter = csv.writer(file, delimiter= ',', quotechar= '|', quoting= csv.QUOTE_MINIMAL)
+        csvWriter = csv.writer(file, delimiter= ',', quotechar= ' ', quoting= csv.QUOTE_MINIMAL)
 
         movieArr = os.listdir(moviesFilePath)
 
-        csvWriter.writerow(['Name', ' Year', ' File Size', ' Duration', ' height', ' Width'])
+        csvWriter.writerow(['Name', ' Year', ' File Size', ' Duration', ' Width', ' Height', ' Format' ])
 
-        
         RemoveBadFiles(movieArr)
 
         for m in movieArr:
@@ -74,16 +77,14 @@ if __name__ == "__main__":
 
             for x in dataArr:
                 if x[len(x) - 4: len(x)] in FileFormatArr:
-                     #print(x)
-                     dimensionsArr = GetDimensions(x)
+                    formatType = x[len(x) - 4: len(x)]
+                    dimensionsArr = GetDimensions(x,moviesFilePath)
                
-
-            duration = 'Duration' 
+            
             height = dimensionsArr[0]
             width = dimensionsArr[1]
+            duration = dimensionsArr[2] 
 
-            
-            csvWriter.writerow([name,year, size, duration, height, width])
+            csvWriter.writerow([name, year, size, duration, width, height, formatType])
                    
     print('finished')
-
